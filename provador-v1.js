@@ -85,6 +85,20 @@
         .q-quantic-logo { height: 20px; filter: brightness(0); }
         .q-status-msg { display:none; font-size: 9px; letter-spacing: 1px; color: #ef4444; margin-top: 8px; font-weight: 600; text-align: left; text-transform: uppercase; }
 
+        /* RECOMENDACAO DE TAMANHO */
+        .q-size-group { display: flex; gap: 10px; }
+        .q-size-group .q-group { flex: 1; }
+        .q-size-result {
+            display: none; margin-top: 12px; padding: 14px; border: 2px solid var(--q-primary);
+            text-align: center; font-family: 'Inter', sans-serif;
+        }
+        .q-size-result strong {
+            font-size: 22px; letter-spacing: 2px; display: block; margin-bottom: 2px;
+        }
+        .q-size-result span {
+            font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--q-text-light);
+        }
+
         /* SELETOR DE IMAGEM DO PRODUTO */
         .q-content-scroll::-webkit-scrollbar { width: 4px; }
         .q-content-scroll::-webkit-scrollbar-thumb { background: #e5e5e5; }
@@ -195,6 +209,22 @@
                                 <label>Seu Celular</label>
                                 <input type="tel" id="q-phone" class="q-input" placeholder="(11) 99999-9999" maxlength="15">
                                 <div id="q-phone-error" class="q-status-msg">Insira um numero valido</div>
+                            </div>
+                            <div id="q-size-fields" style="display:none;">
+                                <div class="q-size-group">
+                                    <div class="q-group">
+                                        <label>Altura (cm)</label>
+                                        <input type="number" id="q-height" class="q-input" placeholder="175" min="140" max="220">
+                                    </div>
+                                    <div class="q-group">
+                                        <label>Peso (kg)</label>
+                                        <input type="number" id="q-weight" class="q-input" placeholder="70" min="30" max="200">
+                                    </div>
+                                </div>
+                                <div id="q-size-result" class="q-size-result">
+                                    <span>Tamanho recomendado</span>
+                                    <strong id="q-size-value"></strong>
+                                </div>
                             </div>
                         </div>
                         <div id="q-photo-selector-group" style="display:none; flex-direction:column; align-items:center; margin:20px 0 10px;">
@@ -361,6 +391,64 @@
         const realInput = document.getElementById('q-real-input');
         const triggerUpload = document.getElementById('q-trigger-upload');
         const phoneInput = document.getElementById('q-phone');
+        const heightInput = document.getElementById('q-height');
+        const weightInput = document.getElementById('q-weight');
+
+        // Detecta se e pagina de kit pela URL ou titulo do produto
+        const prodTitle = (document.querySelector('h1.product__title, .product-single__title, h1')?.innerText || '').toLowerCase();
+        const isKit = window.location.pathname.toLowerCase().includes('kit') ||
+                      prodTitle.includes('kit') ||
+                      (prodTitle.includes('camiseta') && prodTitle.includes('shorts')) ||
+                      (prodTitle.includes('camiseta') && prodTitle.includes('calca'));
+
+        if (isKit) {
+            document.getElementById('q-size-fields').style.display = 'block';
+        }
+
+        function recommendSize(height, weight) {
+            const h = parseInt(height);
+            const w = parseInt(weight);
+            if (!h || !w) return '';
+            // Calcula score baseado em altura e peso
+            // Tabela: P(165-170, 55-60), M(170-175, 60-70), G(175-180, 70-80), GG(180-190, 80-90)
+            const sizes = [
+                { label: 'P',  hMin: 0,   hMax: 170, wMin: 0,  wMax: 60 },
+                { label: 'M',  hMin: 170, hMax: 175, wMin: 60, wMax: 70 },
+                { label: 'G',  hMin: 175, hMax: 180, wMin: 70, wMax: 80 },
+                { label: 'GG', hMin: 180, hMax: 999, wMin: 80, wMax: 999 },
+            ];
+            // Determina tamanho por altura e por peso separadamente, depois pega o maior
+            let sizeByHeight = 'P';
+            if (h >= 180) sizeByHeight = 'GG';
+            else if (h >= 175) sizeByHeight = 'G';
+            else if (h >= 170) sizeByHeight = 'M';
+
+            let sizeByWeight = 'P';
+            if (w >= 80) sizeByWeight = 'GG';
+            else if (w >= 70) sizeByWeight = 'G';
+            else if (w >= 60) sizeByWeight = 'M';
+
+            // Pega o maior dos dois para garantir conforto
+            const order = ['P', 'M', 'G', 'GG'];
+            const idx = Math.max(order.indexOf(sizeByHeight), order.indexOf(sizeByWeight));
+            return order[idx];
+        }
+
+        function updateSizeRecommendation() {
+            if (!isKit) return;
+            const size = recommendSize(heightInput.value, weightInput.value);
+            const resultEl = document.getElementById('q-size-result');
+            const valueEl = document.getElementById('q-size-value');
+            if (size) {
+                valueEl.textContent = size;
+                resultEl.style.display = 'block';
+            } else {
+                resultEl.style.display = 'none';
+            }
+        }
+
+        heightInput.addEventListener('input', updateSizeRecommendation);
+        weightInput.addEventListener('input', updateSizeRecommendation);
 
         let userPhoto = null;
         let selectedProductImg = '';
