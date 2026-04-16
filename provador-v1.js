@@ -277,7 +277,7 @@
                         <div id="q-result-actions-col" style="width:100%;">
                             <span class="q-res-title" style="display:none;">Provador Virtual</span>
                             <span class="q-res-subtitle" style="display:none;">Visualize como a peca fica em voce</span>
-                            <div id="q-size-result" class="q-size-result" style="display:none;">
+                            <div id="q-size-result" class="q-size-result" style="display:none;margin-bottom:20px;">
                                 <span>Tamanho recomendado</span>
                                 <strong id="q-size-value"></strong>
                             </div>
