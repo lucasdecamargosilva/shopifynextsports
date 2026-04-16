@@ -392,9 +392,7 @@
                 const og = document.querySelector('meta[property="og:image"]')?.content;
                 if (og) urls.push(og);
             }
-            // Mostra apenas a 1a, 2a, 4a, 5a e 6a foto (indices 0,1,3,4,5)
-            const allowedIndices = [0, 1, 3, 4, 5];
-            return allowedIndices.filter(i => i < urls.length).map(i => urls[i]);
+            return urls;
         }
 
         function populateProductPicker() {
