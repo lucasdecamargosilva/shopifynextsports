@@ -221,10 +221,6 @@
                                         <input type="number" id="q-weight" class="q-input" placeholder="70" min="30" max="200">
                                     </div>
                                 </div>
-                                <div id="q-size-result" class="q-size-result">
-                                    <span>Tamanho recomendado</span>
-                                    <strong id="q-size-value"></strong>
-                                </div>
                             </div>
                         </div>
                         <div id="q-photo-selector-group" style="display:none; flex-direction:column; align-items:center; margin:20px 0 10px;">
@@ -281,6 +277,10 @@
                         <div id="q-result-actions-col" style="width:100%;">
                             <span class="q-res-title" style="display:none;">Provador Virtual</span>
                             <span class="q-res-subtitle" style="display:none;">Visualize como a peca fica em voce</span>
+                            <div id="q-size-result" class="q-size-result" style="display:none;">
+                                <span>Tamanho recomendado</span>
+                                <strong id="q-size-value"></strong>
+                            </div>
                             <button class="q-btn-buy" id="q-btn-back">Voltar ao Produto</button>
                             <p style="margin-top:20px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--q-text-light);cursor:pointer;text-decoration:underline;text-underline-offset:4px;" id="q-retry-btn">Tentar outra foto</p>
                         </div>
@@ -434,7 +434,7 @@
             return order[idx];
         }
 
-        function updateSizeRecommendation() {
+        function showSizeRecommendation() {
             if (!isKit) return;
             const size = recommendSize(heightInput.value, weightInput.value);
             const resultEl = document.getElementById('q-size-result');
@@ -446,9 +446,6 @@
                 resultEl.style.display = 'none';
             }
         }
-
-        heightInput.addEventListener('input', updateSizeRecommendation);
-        weightInput.addEventListener('input', updateSizeRecommendation);
 
         let userPhoto = null;
         let selectedProductImg = '';
@@ -632,6 +629,7 @@
                     document.getElementById('q-final-view-img').src = URL.createObjectURL(blob);
                     document.querySelector('.q-card-ia').classList.add('is-result');
                     document.getElementById('q-step-result').style.display = 'flex';
+                    showSizeRecommendation();
                 } else if (res.status === 401 || res.status === 403) {
                     document.getElementById('q-loading-box').style.display = 'none';
                     uploadStep.style.display = 'block';
