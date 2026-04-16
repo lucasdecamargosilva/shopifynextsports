@@ -186,7 +186,7 @@
                     <div id="q-header-provador">
                         <h1 style="margin:0 0 6px 0;font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Provador Virtual</h1>
                         <div style="margin:0;text-align:center;">
-                            <img src="https://nextsportbr.com/cdn/shop/files/LOGO_5_408c6be4-e9d7-49b7-9605-560dd6fdf307.png" alt="NEXT SPORT BR" style="height:40px;width:auto;display:inline-block;">
+                            <img src="https://nextsportbr.com/cdn/shop/files/LOGO_5_408c6be4-e9d7-49b7-9605-560dd6fdf307.png" alt="NEXT SPORT BR" style="height:55px;width:auto;display:inline-block;">
                         </div>
                     </div>
                     <div id="q-step-upload">
