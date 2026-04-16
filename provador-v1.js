@@ -477,7 +477,7 @@
                 const og = document.querySelector('meta[property="og:image"]')?.content;
                 if (og) urls.push(og);
             }
-            return urls;
+            return urls.slice(0, 15);
         }
 
         function populateProductPicker() {
