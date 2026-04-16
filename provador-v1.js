@@ -292,11 +292,25 @@
         openBtn.setAttribute('aria-label', 'Abrir Provador Virtual');
         openBtn.insertAdjacentHTML('afterbegin', stampImageHTML);
 
-        // Coloca o selo dentro da galeria de produto
-        const gallery = document.querySelector('.product-single__gallery');
-        if (gallery) {
-            if (window.getComputedStyle(gallery).position === 'static') gallery.style.position = 'relative';
-            gallery.appendChild(openBtn);
+        // Palo Alto theme: galeria usa overflow hidden no slider, entao o selo
+        // precisa ficar no container externo da galeria ou como fixed fallback
+        const gallerySelectors = [
+            '.product-single__gallery',
+            '.product-single__wrapper',
+            '[data-product-single-media-group]',
+            '.product__media-wrapper',
+            'product-gallery',
+            '.product-gallery',
+        ];
+        let galleryEl = null;
+        for (const sel of gallerySelectors) {
+            galleryEl = document.querySelector(sel);
+            if (galleryEl) break;
+        }
+        if (galleryEl) {
+            if (window.getComputedStyle(galleryEl).position === 'static') galleryEl.style.position = 'relative';
+            galleryEl.style.overflow = 'visible';
+            galleryEl.appendChild(openBtn);
         } else {
             openBtn.style.cssText = 'position:fixed;bottom:100px;right:15px;z-index:9999;width:70px;height:70px;';
             document.body.appendChild(openBtn);
@@ -352,11 +366,11 @@
         let selectedProductImg = '';
 
         function extractProductImages() {
-            const invalidKeywords = ['provador', 'logo', 'provoulevou', 'icon', 'play', 'video'];
+            const invalidKeywords = ['provador', 'logo', 'provoulevou', 'icon', 'play', 'video', 'badge', 'whatsapp'];
             const allImgs = document.querySelectorAll(
-                '.product-single__media img, .product-single__media-slide img, ' +
-                '.product-single__gallery img, .product__media img, ' +
-                '.product__media-item img, .product-gallery img, ' +
+                '.product-single__media-slide img, .product-single__media img, ' +
+                '.product-single__gallery img, .image-wrapper figure img, ' +
+                '.product__media img, .product__media-item img, .product-gallery img, ' +
                 '.product-single__photo, .product-featured-media, .product__photo img, ' +
                 '[data-media-id] img, .product-images img, .product__image, ' +
                 '.product-media img, .product__media-wrapper img'
