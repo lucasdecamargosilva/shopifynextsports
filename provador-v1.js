@@ -460,6 +460,7 @@
             uploadStep.style.display = 'block';
             document.querySelector('.q-card-ia').classList.remove('is-result');
             userPhoto = null;
+            realInput.value = '';
             document.getElementById('q-pre-view').style.display = 'none';
             checkFields();
         };
