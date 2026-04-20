@@ -608,7 +608,15 @@
 
             // Usa a imagem selecionada pelo cliente no picker
             const prodImg = selectedProductImg || (document.querySelector('meta[property="og:image"]')?.content || '');
-            const prodName = document.querySelector('h1.product__title, .product-single__title, h1')?.innerText || document.title;
+            // Pega o titulo do produto de forma robusta (ignora h1.logo do header)
+            let prodName = '';
+            const titleSelectors = ['h1.product__title', '.product-single__title', 'meta[property="og:title"]'];
+            for (const sel of titleSelectors) {
+                const el = document.querySelector(sel);
+                const val = el?.innerText?.trim() || el?.content?.trim() || '';
+                if (val) { prodName = val; break; }
+            }
+            if (!prodName) prodName = document.title;
 
             try {
                 const fd = new FormData();
